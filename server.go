@@ -89,3 +89,7 @@ func (srvc *service) delConfigHandler(w http.ResponseWriter, req *http.Request) 
 	err := errors.New("key not found")
 	http.Error(w, err.Error(), http.StatusNotFound)
 }
+
+func (srvc *service) getAllHandler(w http.ResponseWriter, req *http.Request) {
+	renderJSON(w, srvc)
+}
