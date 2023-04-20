@@ -12,7 +12,7 @@ type service struct {
 	Data map[string][]*Config `json:"Configuration groups"`
 }
 
-func (ts *postServer) createPostHandler(w http.ResponseWriter, req *http.Request) {
+func (srvc *service) createConfigGroupHandler(w http.ResponseWriter, req *http.Request) {
 	contentType := req.Header.Get("Content-Type")
 	mediatype, _, err := mime.ParseMediaType(contentType)
 	if err != nil {
@@ -32,26 +32,95 @@ func (ts *postServer) createPostHandler(w http.ResponseWriter, req *http.Request
 		return
 	}
 
-	id := createId()
-	rt.Id = id
-	ts.data[id] = rt
+	configId := createId()
+	if len(srvc.Data) == 0 {
+		srvc.Data = map[string][]*Config{}
+	}
+	var cfgs []*Config
+	for i := 0; i < len(rt); i++ {
+		var cfg Config
+		cfg.Entries = make(map[string]string)
+		cfg.Entries = rt[i]
+		cfgs = append(cfgs, &cfg)
+	}
+	srvc.Data[configId] = cfgs
 	renderJSON(w, rt)
 }
 
-func (ts *postServer) getAllHandler(w http.ResponseWriter, req *http.Request) {
-	allTasks := []*RequestPost{}
-	for _, v := range ts.data {
-		allTasks = append(allTasks, v)
+func (srvc *service) createConfigHandler(w http.ResponseWriter, req *http.Request) {
+	id := mux.Vars(req)["id"]
+	contentType := req.Header.Get("Content-Type")
+	mediatype, _, err := mime.ParseMediaType(contentType)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
 	}
 
-	renderJSON(w, allTasks)
-}
+	if mediatype != "application/json" {
+		err := errors.New("Expect application/json Content-Type")
+		http.Error(w, err.Error(), http.StatusUnsupportedMediaType)
+		return
+	}
 
-func (ts *postServer) getPostHandler(w http.ResponseWriter, req *http.Request) {
-	id := mux.Vars(req)["id"]
-	task, ok := ts.data[id]
+	rt, err := decodeBody(req.Body)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	task, ok := srvc.Data[id]
 	if !ok {
 		err := errors.New("key not found")
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+
+	if len(task) < 2 {
+		err := errors.New("can't add a configuration to another one that's outside of a group")
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+
+	var cfgs []*Config
+
+	for i := 0; i < len(rt); i++ {
+		var cfg Config
+		cfg.Entries = make(map[string]string)
+		cfg.Entries = rt[i]
+		cfgs = append(cfgs, &cfg)
+	}
+	for i := 0; i < len(cfgs); i++ {
+		srvc.Data[id] = append(srvc.Data[id], cfgs[i])
+	}
+	renderJSON(w, srvc.Data[id])
+}
+
+func (srvc *service) getConfigGroupHandler(w http.ResponseWriter, req *http.Request) {
+	id := mux.Vars(req)["id"]
+	task, ok := srvc.Data[id]
+	if !ok {
+		err := errors.New("key not found")
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+	if len(task) < 2 {
+		err := errors.New("This is a single configuration not a group")
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+	renderJSON(w, task)
+}
+
+func (srvc *service) getConfigHandler(w http.ResponseWriter, req *http.Request) {
+	id := mux.Vars(req)["id"]
+	task, ok := srvc.Data[id]
+	if !ok {
+		err := errors.New("key not found")
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+	if len(task) > 1 {
+		err := errors.New("This is group of configurations not a single one")
 		http.Error(w, err.Error(), http.StatusNotFound)
 		return
 	}
