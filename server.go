@@ -58,13 +58,34 @@ func (ts *postServer) getPostHandler(w http.ResponseWriter, req *http.Request) {
 	renderJSON(w, task)
 }
 
-func (ts *postServer) delPostHandler(w http.ResponseWriter, req *http.Request) {
+func (srvc *service) delConfigGroupHandler(w http.ResponseWriter, req *http.Request) {
 	id := mux.Vars(req)["id"]
-	if v, ok := ts.data[id]; ok {
-		delete(ts.data, id)
+	if v, ok := srvc.Data[id]; ok {
+		if len(v) < 2 {
+			err := errors.New("can't delete one configuration, must be a group")
+			http.Error(w, err.Error(), http.StatusNotFound)
+			return
+		}
+		delete(srvc.Data, id)
 		renderJSON(w, v)
 	} else {
 		err := errors.New("key not found")
 		http.Error(w, err.Error(), http.StatusNotFound)
 	}
+}
+
+func (srvc *service) delConfigHandler(w http.ResponseWriter, req *http.Request) {
+	id := mux.Vars(req)["id"]
+	if v, ok := srvc.Data[id]; ok {
+		if len(v) > 1 {
+			err := errors.New("can't delete a group, must be a single configuration")
+			http.Error(w, err.Error(), http.StatusNotFound)
+			return
+		}
+		delete(srvc.Data, id)
+		renderJSON(w, v)
+		return
+	}
+	err := errors.New("key not found")
+	http.Error(w, err.Error(), http.StatusNotFound)
 }
