@@ -1,14 +1,15 @@
 package main
 
 import (
-	"net/http"
 	"errors"
 	"mime"
+	"net/http"
+
 	"github.com/gorilla/mux"
 )
 
-type postServer struct {
-	data map[string]*RequestPost // izigrava bazu podataka
+type service struct {
+	Data map[string][]*Config `json:"Configuration groups"`
 }
 
 func (ts *postServer) createPostHandler(w http.ResponseWriter, req *http.Request) {

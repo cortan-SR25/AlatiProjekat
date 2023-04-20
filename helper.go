@@ -4,18 +4,19 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
+
 	"github.com/google/uuid"
 )
 
-func decodeBody(r io.Reader) (*RequestPost, error) {
+func decodeBody(r io.Reader) ([]map[string]string, error) {
 	dec := json.NewDecoder(r)
 	dec.DisallowUnknownFields()
 
-	var rt RequestPost
-	if err := dec.Decode(&rt); err != nil {
+	var configs []map[string]string
+	if err := dec.Decode(&configs); err != nil {
 		return nil, err
 	}
-	return &rt, nil
+	return configs, nil
 }
 
 func renderJSON(w http.ResponseWriter, v interface{}) {

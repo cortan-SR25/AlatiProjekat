@@ -2,13 +2,14 @@ package main
 
 import (
 	"context"
-	"github.com/gorilla/mux"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
+
+	"github.com/gorilla/mux"
 )
 
 func main() {
@@ -18,13 +19,16 @@ func main() {
 	router := mux.NewRouter()
 	router.StrictSlash(true)
 
-	server := postServer{
-		data: map[string]*RequestPost{},
+	server := service{
+		Data: map[string][]*Config{},
 	}
-	router.HandleFunc("/post/", server.createPostHandler).Methods("POST")
-	router.HandleFunc("/posts/", server.getAllHandler).Methods("GET")
-	router.HandleFunc("/post/{id}/", server.getPostHandler).Methods("GET")
-	router.HandleFunc("/post/{id}/", server.delPostHandler).Methods("DELETE")
+	router.HandleFunc("/config/", server.createConfigGroupHandler).Methods("POST")
+	router.HandleFunc("/cfgroup/{id}/", server.createConfigHandler).Methods("POST")
+	router.HandleFunc("/configs/", server.getAllHandler).Methods("GET")
+	router.HandleFunc("/config/{id}/", server.getConfigHandler).Methods("GET")
+	router.HandleFunc("/cfgroup/{id}/", server.getConfigGroupHandler).Methods("GET")
+	router.HandleFunc("/cfgroup/{id}/", server.delConfigGroupHandler).Methods("DELETE")
+	router.HandleFunc("/config/{id}/", server.delConfigHandler).Methods("DELETE")
 
 	// start server
 	srv := &http.Server{Addr: "0.0.0.0:8000", Handler: router}
