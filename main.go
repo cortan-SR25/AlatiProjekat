@@ -20,11 +20,14 @@ func main() {
 	router.StrictSlash(true)
 
 	server := service{
-		Data: map[string][]*Config{},
+		Data:           map[string][]*Config{},
+		Configurations: []*Config{},
 	}
-	router.HandleFunc("/config/", server.createConfigGroupHandler).Methods("POST")
-	router.HandleFunc("/cfgroup/{id}/", server.createConfigHandler).Methods("POST")
-	router.HandleFunc("/configs/", server.getAllHandler).Methods("GET")
+
+	router.HandleFunc("/cfgroup/", server.createConfigGroupHandler).Methods("POST")
+	router.HandleFunc("/config/", server.createConfigHandler).Methods("POST")
+	router.HandleFunc("/cfgroup/{id}/", server.expandConfigGroupHandler).Methods("POST")
+	router.HandleFunc("/all/", server.getAllHandler).Methods("GET")
 	router.HandleFunc("/config/{id}/", server.getConfigHandler).Methods("GET")
 	router.HandleFunc("/cfgroup/{id}/", server.getConfigGroupHandler).Methods("GET")
 	router.HandleFunc("/cfgroup/{id}/", server.delConfigGroupHandler).Methods("DELETE")

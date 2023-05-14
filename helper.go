@@ -8,15 +8,26 @@ import (
 	"github.com/google/uuid"
 )
 
-func decodeBody(r io.Reader) ([]map[string]string, error) {
+func decodeConfigGroupBody(r io.Reader) ([]*Config, error) {
 	dec := json.NewDecoder(r)
 	dec.DisallowUnknownFields()
 
-	var configs []map[string]string
+	var configs []*Config
 	if err := dec.Decode(&configs); err != nil {
 		return nil, err
 	}
 	return configs, nil
+}
+
+func decodeConfigBody(r io.Reader) (*Config, error) {
+	dec := json.NewDecoder(r)
+	dec.DisallowUnknownFields()
+
+	var config *Config
+	if err := dec.Decode(&config); err != nil {
+		return nil, err
+	}
+	return config, nil
 }
 
 func renderJSON(w http.ResponseWriter, v interface{}) {
