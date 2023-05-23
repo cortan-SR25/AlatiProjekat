@@ -3,27 +3,28 @@ package main
 import (
 	"encoding/json"
 	"io"
+	"main/configstore"
 	"net/http"
 
 	"github.com/google/uuid"
 )
 
-func decodeConfigGroupBody(r io.Reader) ([]*Config, error) {
+func decodeConfigGroupBody(r io.Reader) (*configstore.CfGroup, error) {
 	dec := json.NewDecoder(r)
 	dec.DisallowUnknownFields()
 
-	var configs []*Config
-	if err := dec.Decode(&configs); err != nil {
+	var cfgroup *configstore.CfGroup
+	if err := dec.Decode(&cfgroup); err != nil {
 		return nil, err
 	}
-	return configs, nil
+	return cfgroup, nil
 }
 
-func decodeConfigBody(r io.Reader) (*Config, error) {
+func decodeConfigBody(r io.Reader) (*configstore.Config, error) {
 	dec := json.NewDecoder(r)
 	dec.DisallowUnknownFields()
 
-	var config *Config
+	var config *configstore.Config
 	if err := dec.Decode(&config); err != nil {
 		return nil, err
 	}
