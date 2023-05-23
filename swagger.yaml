@@ -1,0 +1,456 @@
+basePath: /
+info:
+    description: 'Title: Config API'
+    title: Config API
+    version: 0.0.1
+paths:
+    /cfgroup/:
+        post:
+            description: Add new configuration group
+            operationId: createConfigGroup
+            parameters:
+                - description: 'name: body'
+                  in: body
+                  name: body
+                  required: true
+                  schema: {}
+                  x-go-name: Body
+            responses:
+                "200":
+                    $ref: '#/responses/ResponseCfGroup'
+                "400":
+                    $ref: '#/responses/ErrorResponse'
+                "415":
+                    $ref: '#/responses/ErrorResponse'
+            tags:
+                - cfgroup
+    /cfgroup/{groupId}/{version}/config/{label}/:
+        get:
+            description: Get configuration by label version and groupId
+            operationId: getGroupConfigByLabel
+            parameters:
+                - description: Group groupId
+                  in: path
+                  name: groupId
+                  required: true
+                  type: string
+                  x-go-name: GroupId
+                - description: Group version
+                  in: path
+                  name: version
+                  required: true
+                  type: string
+                  x-go-name: Version
+                - description: Config label
+                  in: path
+                  name: label
+                  required: true
+                  type: string
+                  x-go-name: Labels
+            responses:
+                "200":
+                    $ref: '#/responses/ResponseConfig'
+                "400":
+                    $ref: '#/responses/ErrorResponse'
+                "415":
+                    $ref: '#/responses/ErrorResponse'
+            tags:
+                - config
+    /cfgroup/{groupId}/{version}/config/{label}/{configId}/:
+        delete:
+            description: Delete configuration by configId label version and groupId
+            operationId: deleteGroupConfigByLabelAndId
+            parameters:
+                - description: Group groupId
+                  in: path
+                  name: groupId
+                  required: true
+                  type: string
+                  x-go-name: GroupId
+                - description: Group version
+                  in: path
+                  name: version
+                  required: true
+                  type: string
+                  x-go-name: Version
+                - description: Config label
+                  in: path
+                  name: label
+                  required: true
+                  type: string
+                  x-go-name: Labels
+                - description: Config configId
+                  in: path
+                  name: configId
+                  required: true
+                  type: string
+                  x-go-name: ConfigId
+            responses:
+                "204":
+                    $ref: '#/responses/NoContentResponse'
+                "404":
+                    $ref: '#/responses/ErrorResponse'
+            tags:
+                - cfgroup
+        get:
+            description: Get configuration by configId label version and groupId
+            operationId: getGroupConfigByIdAndLabel
+            parameters:
+                - description: Group groupId
+                  in: path
+                  name: groupId
+                  required: true
+                  type: string
+                  x-go-name: GroupId
+                - description: Group version
+                  in: path
+                  name: version
+                  required: true
+                  type: string
+                  x-go-name: Version
+                - description: Config label
+                  in: path
+                  name: label
+                  required: true
+                  type: string
+                  x-go-name: Labels
+                - description: Config configId
+                  in: path
+                  name: configId
+                  required: true
+                  type: string
+                  x-go-name: ConfigId
+            responses:
+                "200":
+                    $ref: '#/responses/ResponseConfig'
+                "400":
+                    $ref: '#/responses/ErrorResponse'
+                "415":
+                    $ref: '#/responses/ErrorResponse'
+            tags:
+                - config
+    /cfgroup/{id}/:
+        delete:
+            description: Delete configuration group by ID
+            operationId: deleteGroupById
+            parameters:
+                - description: Group ID
+                  in: path
+                  name: id
+                  required: true
+                  type: string
+                  x-go-name: Id
+            responses:
+                "204":
+                    $ref: '#/responses/NoContentResponse'
+                "404":
+                    $ref: '#/responses/ErrorResponse'
+            tags:
+                - cfgroup
+        get:
+            description: Get configuration group by ID
+            operationId: getCfGroupById
+            parameters:
+                - description: Group ID
+                  in: path
+                  name: id
+                  required: true
+                  type: string
+                  x-go-name: Id
+            responses:
+                "200":
+                    $ref: '#/responses/ResponseCfGroup'
+                "400":
+                    $ref: '#/responses/ErrorResponse'
+                "415":
+                    $ref: '#/responses/ErrorResponse'
+            tags:
+                - cfgroup
+    /cfgroup/{id}/{version}/:
+        delete:
+            description: Delete configuration group by ID and version
+            operationId: deleteGroupByIdAndVersion
+            parameters:
+                - description: Group ID
+                  in: path
+                  name: id
+                  required: true
+                  type: string
+                  x-go-name: Id
+                - description: Group version
+                  in: path
+                  name: version
+                  required: true
+                  type: string
+                  x-go-name: Version
+            responses:
+                "204":
+                    $ref: '#/responses/NoContentResponse'
+                "404":
+                    $ref: '#/responses/ErrorResponse'
+            tags:
+                - cfgroup
+        get:
+            description: Get configuration group by ID and version
+            operationId: getCfGroupByIdAndVersion
+            parameters:
+                - description: Group ID
+                  in: path
+                  name: id
+                  required: true
+                  type: string
+                  x-go-name: Id
+                - description: Group version
+                  in: path
+                  name: version
+                  required: true
+                  type: string
+                  x-go-name: Version
+            responses:
+                "200":
+                    $ref: '#/responses/ResponseCfGroup'
+                "400":
+                    $ref: '#/responses/ErrorResponse'
+                "415":
+                    $ref: '#/responses/ErrorResponse'
+            tags:
+                - cfgroup
+    /cfgroup/{id}/config/:
+        put:
+            description: Add new configuration to group by ID
+            operationId: expandConfigGroup
+            parameters:
+                - description: CfGroup ID
+                  in: path
+                  name: id
+                  required: true
+                  type: string
+                  x-go-name: Id
+                - description: 'name: body'
+                  in: body
+                  name: body
+                  required: true
+                  schema: {}
+                  x-go-name: Body
+            responses:
+                "200":
+                    $ref: '#/responses/ResponseCfGroup'
+                "400":
+                    $ref: '#/responses/ErrorResponse'
+                "415":
+                    $ref: '#/responses/ErrorResponse'
+            tags:
+                - cfgroup
+    /cfgroups/:
+        get:
+            description: Get all configuration groups
+            operationId: getAllCfGroups
+            responses:
+                "200":
+                    $ref: '#/responses/ResponseCfGroup'
+            tags:
+                - cfgroup
+    /config/:
+        post:
+            description: Add new configuration
+            operationId: createConfig
+            parameters:
+                - description: 'name: body'
+                  in: body
+                  name: body
+                  required: true
+                  schema: {}
+                  x-go-name: Body
+            responses:
+                "200":
+                    $ref: '#/responses/ResponseConfig'
+                "400":
+                    $ref: '#/responses/ErrorResponse'
+                "415":
+                    $ref: '#/responses/ErrorResponse'
+            tags:
+                - config
+    /config/{id}/:
+        delete:
+            description: Delete configuration by ID
+            operationId: deleteConfigById
+            parameters:
+                - description: Config ID
+                  in: path
+                  name: id
+                  required: true
+                  type: string
+                  x-go-name: Id
+            responses:
+                "204":
+                    $ref: '#/responses/NoContentResponse'
+                "404":
+                    $ref: '#/responses/ErrorResponse'
+            tags:
+                - config
+        get:
+            description: Get configuration by ID
+            operationId: getConfigById
+            parameters:
+                - description: Config ID
+                  in: path
+                  name: id
+                  required: true
+                  type: string
+                  x-go-name: Id
+            responses:
+                "200":
+                    $ref: '#/responses/ResponseConfig'
+                "404":
+                    $ref: '#/responses/ErrorResponse'
+            tags:
+                - config
+        put:
+            description: Put configuration by ID
+            operationId: putConfig
+            parameters:
+                - description: Config ID
+                  in: path
+                  name: id
+                  required: true
+                  type: string
+                  x-go-name: Id
+                - description: 'name: body'
+                  in: body
+                  name: body
+                  required: true
+                  schema: {}
+                  x-go-name: Body
+            responses:
+                "200":
+                    $ref: '#/responses/ResponseConfig'
+                "400":
+                    $ref: '#/responses/ErrorResponse'
+                "415":
+                    $ref: '#/responses/ErrorResponse'
+            tags:
+                - config
+    /config/{id}/{version}:
+        delete:
+            description: Delete configuration by ID and version
+            operationId: deleteConfigByIdAndVersion
+            parameters:
+                - description: Config ID
+                  in: path
+                  name: id
+                  required: true
+                  type: string
+                  x-go-name: Id
+                - description: Config version
+                  in: path
+                  name: version
+                  required: true
+                  type: string
+                  x-go-name: Version
+            responses:
+                "204":
+                    $ref: '#/responses/NoContentResponse'
+                "404":
+                    $ref: '#/responses/ErrorResponse'
+            tags:
+                - config
+    /config/{id}/{version}/:
+        get:
+            description: Get configuration by ID and version
+            operationId: getConfigByIdAndVersion
+            parameters:
+                - description: Config ID
+                  in: path
+                  name: id
+                  required: true
+                  type: string
+                  x-go-name: Id
+                - description: Config version
+                  in: path
+                  name: version
+                  required: true
+                  type: string
+                  x-go-name: Version
+            responses:
+                "200":
+                    $ref: '#/responses/ResponseConfig'
+                "404":
+                    $ref: '#/responses/ErrorResponse'
+            tags:
+                - config
+    /configs/:
+        get:
+            description: Get all configurations
+            operationId: getAllConfigs
+            responses:
+                "200":
+                    $ref: '#/responses/ResponseConfig'
+            tags:
+                - config
+produces:
+    - application/json
+responses:
+    ErrorResponse:
+        description: ""
+        headers:
+            message:
+                description: |-
+                    Message of the error
+                    in: string
+                type: string
+            status:
+                description: |-
+                    Error status code
+                    in: int64
+                format: int64
+                type: integer
+    NoContentResponse:
+        description: ""
+    ResponseCfGroup:
+        description: ""
+        headers:
+            Configurations:
+                description: |-
+                    Configurations of the cfgroup
+                    in: []*Config
+                items: {}
+                type: array
+            Id:
+                description: |-
+                    Id of the cfgroup
+                    in: string
+                type: string
+            version:
+                description: |-
+                    Version of the cfgroup
+                    in: string
+                type: string
+    ResponseConfig:
+        description: ""
+        headers:
+            Entries:
+                description: |-
+                    Entries of the config
+                    in: string
+                type: string
+            Id:
+                description: |-
+                    Id of the config
+                    in: string
+                type: string
+            labels:
+                description: |-
+                    Labels of the config
+                    in: string
+                type: string
+            version:
+                description: |-
+                    Version of the config
+                    in: string
+                type: string
+        schema:
+            additionalProperties: {}
+            type: object
+schemes:
+    - http
+swagger: "2.0"
